@@ -1,0 +1,10 @@
+[package]
+name = "msigetprop"
+description = "Get a property value from a Windows Installer package on any platform"
+version = "0.1.0"
+edition = "2021"
+authors = ["Heath Stewart (heaths)"]
+
+[dependencies]
+clap = { version = "4.0.8", features = ["cargo"] }
+msi = "0.5.0"

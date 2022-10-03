@@ -12,6 +12,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let matches = command!()
         .arg(
             Arg::new("path")
+                .help("Path to a Windows Installer package (MSI)")
                 .value_parser(value_parser!(PathBuf))
                 .required(true),
         )

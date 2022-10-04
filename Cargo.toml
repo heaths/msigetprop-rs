@@ -6,11 +6,9 @@ edition = "2021"
 authors = ["Heath Stewart (heaths)"]
 
 [dependencies]
-clap = { version = "4.0", features = ["cargo"] }
-msi = "0.5"
-tracing = "0.1"
-tracing-subscriber = "0.3"
+msi = "0.5.0"
+tracing = "0.1.36"
 
-[[bin]]
-name = "msigetprop"
-path = "src/bin/main.rs"
+[dev-dependencies]
+clap = { version = "4.0", features = ["cargo"] }
+tracing-subscriber = "0.3"

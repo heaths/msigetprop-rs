@@ -16,12 +16,13 @@ where
     let span = trace_span!("opening package");
     let mut package = span.in_scope(|| msi::open(path))?;
 
+    let columns = vec!["Value"];
+    let query = Select::table("Property")
+        .columns(&columns)
+        .with(Expr::col("Property").eq(Expr::string(property)));
+
     let span = trace_span!("querying property");
     span.in_scope(|| {
-        let columns = vec!["Value"];
-        let query = Select::table("Property")
-            .columns(&columns)
-            .with(Expr::col("Property").eq(Expr::string(property)));
         let rows = package.select_rows(query)?;
         for row in rows {
             if let Value::Str(value) = row.index(0) {

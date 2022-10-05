@@ -6,7 +6,7 @@ use std::path::Path;
 use std::{fmt::Debug, io::Result};
 
 use msi::{self, Expr, Select, Value};
-use tracing::{instrument, trace_span};
+use tracing::{instrument, trace_span, warn};
 
 #[instrument]
 pub fn get_property<P>(path: P, property: &str) -> Result<Option<String>>
@@ -22,15 +22,16 @@ where
         .with(Expr::col("Property").eq(Expr::string(property)));
 
     let span = trace_span!("querying property");
-    span.in_scope(|| {
-        let rows = package.select_rows(query)?;
-        for row in rows {
-            if let Value::Str(value) = row.index(0) {
-                let value = value.to_owned();
-                return Ok(Some(value));
-            }
-        }
+    let _guard = span.enter();
 
-        Ok(None)
-    })
+    let rows = package.select_rows(query)?;
+    for row in rows {
+        if let Value::Str(value) = row.index(0) {
+            let value = value.to_owned();
+            return Ok(Some(value));
+        }
+    }
+
+    warn!(parent: &span, "property not defined: {}", property);
+    Ok(None)
 }
